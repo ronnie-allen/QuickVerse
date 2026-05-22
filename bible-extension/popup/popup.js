@@ -400,11 +400,14 @@ function showToast() {
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
-el('translation-badge').addEventListener('click', (e) => {
-  e.stopPropagation();
-  el('dropdown-menu').classList.toggle('open');
-  el('translation-badge').classList.toggle('open');
-});
+const badge = el('translation-badge');
+if (badge) {
+  badge.addEventListener('click', (e) => {
+    e.stopPropagation();
+    el('dropdown-menu').classList.toggle('open');
+    badge.classList.toggle('open');
+  });
+}
 
 document.querySelectorAll('.dropdown-item').forEach(item => {
   item.addEventListener('click', () => {

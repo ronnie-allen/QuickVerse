@@ -4,9 +4,9 @@ Chrome extension for browsing and copying Bible verses in **TOVBSI** (Tamil), **
 
 ## Why this exists
 
-I take sermon notes in Google Docs. You know the drill — pastor mentions a verse, you alt-tab to Google, type it in, scan through results, copy the text, paste it in your doc, realise the formatting's wonky, fix it, alt-tab back. By then you've missed half the sermon.
+I take sermon notes in Google Docs. You know - to mention a verse, you alt-tab to Google, type it in, scan through results, copy the text, paste it in your doc, realise the formatting's wonky, fix it, alt-tab back. By then you've missed half the sermon.
 
-I got tired of that dance. So I built this. One shortcut, pick the verse, copy, paste. Two seconds, back to your notes.
+I got tired of that. So I built this. One shortcut, pick the verse, copy, paste. Two seconds, back to your notes.
 
 ## Screenshots
 
