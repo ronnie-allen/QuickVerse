@@ -2,13 +2,16 @@
   "manifest_version": 3,
   "name": "Bible Verse Extractor",
   "version": "1.0.0",
-  "description": "Browse and copy Bible verses (TOVBSI, NIV, AMP) with one click to paste into Google Docs",
+  "description": "Browse and copy Bible verses in Tamil (TOVBSI) and English (NIV, AMP) — one-click copy to paste into Google Docs",
+  "author": "Your Name",
+  "homepage_url": "https://github.com/your-username/bible-extension",
   "permissions": [
     "clipboardWrite",
     "storage"
   ],
   "action": {
     "default_popup": "popup/popup.html",
+    "default_title": "Bible Verse Extractor",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
