@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const API_BASE = 'https://rest.api.bible/v1';
-const API_KEY = 'VNOFzG7ZMZf-LFfAFs9Zn';
+const API_KEY = 'YOUR_API_KEY_HERE';
 
 const BIBLE_IDS = {
   NIV: '78a9f6124f344018-01',
@@ -68,7 +68,7 @@ const BOOKS = [
   { abbr: 'TIT', name: 'Titus', chapters: 3 },
   { abbr: 'PHM', name: 'Philemon', chapters: 1 },
   { abbr: 'HEB', name: 'Hebrews', chapters: 13 },
-  { abbr: 'JAM', name: 'James', chapters: 5 },
+  { abbr: 'JAM', name: 'James', chapters: 5, apiAbbr: 'JAS' },
   { abbr: '1PE', name: '1 Peter', chapters: 5 },
   { abbr: '2PE', name: '2 Peter', chapters: 3 },
   { abbr: '1JN', name: '1 John', chapters: 5 },
@@ -143,8 +143,9 @@ async function fetchBible(label, bibleId) {
     console.log(`${book.name} (${book.abbr})`);
     result[book.abbr] = {};
 
+    const apiAbbr = book.apiAbbr || book.abbr;
     for (let ch = 1; ch <= book.chapters; ch++) {
-      const chapterId = `${book.abbr}.${ch}`;
+      const chapterId = `${apiAbbr}.${ch}`;
       const url = `${API_BASE}/bibles/${bibleId}/chapters/${chapterId}?content-type=text&include-verse-numbers=true&include-titles=false`;
 
       try {
