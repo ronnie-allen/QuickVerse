@@ -91,7 +91,7 @@ const el = (id) => document.getElementById(id);
 function updateTranslationBadge(key) {
   const t = TRANSLATIONS[key];
   if (t) {
-    el('translation-badge').textContent = t.badge;
+    el('translation-badge').querySelector('.badge-text').textContent = t.badge;
   }
 }
 
@@ -400,14 +400,30 @@ function showToast() {
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
-const hiddenSelect = document.querySelector('#translation-select select');
-hiddenSelect.addEventListener('change', () => {
-  loadTranslation(hiddenSelect.value);
+el('translation-badge').addEventListener('click', (e) => {
+  e.stopPropagation();
+  el('dropdown-menu').classList.toggle('open');
+  el('translation-badge').classList.toggle('open');
 });
 
-el('translation-badge').addEventListener('click', () => {
-  hiddenSelect.focus();
-  hiddenSelect.click();
+document.querySelectorAll('.dropdown-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const key = item.dataset.value;
+    document.querySelectorAll('.dropdown-item').forEach(d => d.classList.remove('selected'));
+    item.classList.add('selected');
+    el('dropdown-menu').classList.remove('open');
+    el('translation-badge').classList.remove('open');
+    if (key !== currentTranslation) {
+      loadTranslation(key);
+    }
+  });
+});
+
+document.addEventListener('click', (e) => {
+  if (!el('badge-wrapper').contains(e.target)) {
+    el('dropdown-menu').classList.remove('open');
+    el('translation-badge').classList.remove('open');
+  }
 });
 
 el('book-select').addEventListener('change', () => {

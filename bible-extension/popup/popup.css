@@ -9,12 +9,14 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   font-size: 14px;
   color: #1a1a1a;
-  background: #ffffff;
+  background: #f0f2f5;
   -webkit-font-smoothing: antialiased;
 }
 
 .container {
   padding: 16px;
+  background: #ffffff;
+  min-height: 100%;
 }
 
 header {
@@ -40,24 +42,94 @@ header {
   color: #1a1a1a;
 }
 
+.badge-wrapper {
+  position: relative;
+}
+
 .translation-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 11px;
   font-weight: 600;
-  padding: 4px 10px;
+  padding: 5px 10px;
   border-radius: 100px;
   background: #e8f0fe;
   color: #1a73e8;
-  letter-spacing: 0.02em;
   cursor: pointer;
   transition: background 0.15s ease;
+  user-select: none;
 }
 
 .translation-badge:hover {
   background: #d2e3fc;
 }
 
-.translation-select-hidden {
+.translation-badge.open {
+  background: #d2e3fc;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 180px;
+  background: #ffffff;
+  border: 1px solid #e0e3e8;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
   display: none;
+  z-index: 100;
+  padding: 4px;
+}
+
+.dropdown-menu.open {
+  display: block;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.dropdown-item:hover {
+  background: #f0f2f5;
+}
+
+.dropdown-item .item-lang {
+  font-size: 13px;
+  color: #1a1a1a;
+  flex: 1;
+}
+
+.dropdown-item .item-version {
+  font-size: 11px;
+  font-weight: 600;
+  color: #5f6368;
+  background: #f0f2f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.dropdown-item .item-check {
+  display: none;
+}
+
+.dropdown-item.selected .item-check {
+  display: block;
+}
+
+.dropdown-item.selected {
+  background: #e8f0fe;
+}
+
+.dropdown-item.selected .item-version {
+  background: transparent;
 }
 
 .tabs {
@@ -176,17 +248,18 @@ header {
 .verse-display {
   position: relative;
   padding: 14px;
-  background: #ffffff;
-  border: 1px solid #e8eaed;
+  background: #fafafa;
+  border: 1px solid #e2e5e9;
   border-radius: 10px;
   margin-bottom: 12px;
   min-height: 72px;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .verse-display:not(:has(.placeholder-text)) {
-  border-color: #dadce0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  background: #ffffff;
+  border-color: #e0e3e8;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .verse-number-badge {
@@ -221,7 +294,7 @@ header {
   font-size: 12px;
   color: #5f6368;
   font-style: italic;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid #eee;
   padding-top: 8px;
 }
 
