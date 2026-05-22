@@ -165,7 +165,7 @@ async function fetchBible(label, bibleId) {
       if (ch % 5 === 0) {
         console.log(`  Ch ${ch}/${book.chapters}`);
       }
-      await sleep(250);
+      await sleep(80);
     }
 
     console.log(`  Done (${Object.keys(result[book.abbr]).length} chapters)`);
