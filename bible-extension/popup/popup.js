@@ -405,6 +405,11 @@ hiddenSelect.addEventListener('change', () => {
   loadTranslation(hiddenSelect.value);
 });
 
+el('translation-badge').addEventListener('click', () => {
+  hiddenSelect.focus();
+  hiddenSelect.click();
+});
+
 el('book-select').addEventListener('change', () => {
   const val = el('book-select').value;
   if (!val) {

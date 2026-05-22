@@ -48,6 +48,12 @@ header {
   background: #e8f0fe;
   color: #1a73e8;
   letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.translation-badge:hover {
+  background: #d2e3fc;
 }
 
 .translation-select-hidden {
