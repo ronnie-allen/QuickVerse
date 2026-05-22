@@ -74,9 +74,9 @@ for (const b of BOOKS) {
 }
 
 const TRANSLATIONS = {
-  tovbsi: { file: 'data/tovbsi.json', label: 'TOVBSI' },
-  niv: { file: 'data/niv.json', label: 'NIV' },
-  amp: { file: 'data/amp.json', label: 'AMP' },
+  tovbsi: { file: 'data/tovbsi.json', label: 'TOVBSI', badge: 'தமிழ் (TOVBSI)' },
+  niv: { file: 'data/niv.json', label: 'NIV', badge: 'English (NIV)' },
+  amp: { file: 'data/amp.json', label: 'AMP', badge: 'English (AMP)' },
 };
 
 let currentData = null;
@@ -88,6 +88,13 @@ let currentVerseText = '';
 
 const el = (id) => document.getElementById(id);
 
+function updateTranslationBadge(key) {
+  const t = TRANSLATIONS[key];
+  if (t) {
+    el('translation-badge').textContent = t.badge;
+  }
+}
+
 async function loadTranslation(key) {
   const t = TRANSLATIONS[key];
   if (!t) return;
@@ -97,13 +104,15 @@ async function loadTranslation(key) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     currentData = await res.json();
     currentTranslation = key;
+    updateTranslationBadge(key);
     populateBooks();
-    clearVerse();
+    clearBrowse();
+    clearSearch();
     enableCopyBtn(false);
   } catch (err) {
     console.error('Failed to load', t.file, err);
     currentData = null;
-    el('verse-display').innerHTML = `<span class="placeholder">Failed to load ${t.label}. Ensure ${t.file} exists.</span>`;
+    el('browse-display').innerHTML = '<div class="placeholder-text">Failed to load ' + t.label + '</div>';
   }
 }
 
@@ -124,15 +133,15 @@ function populateBooks() {
     sel.appendChild(opt);
   }
   sel.disabled = false;
-  el('chapter-select').innerHTML = '<option value="">Chapter</option>';
+  el('chapter-select').innerHTML = '<option value="">Ch</option>';
   el('chapter-select').disabled = true;
-  el('verse-select').innerHTML = '<option value="">Verse</option>';
+  el('verse-select').innerHTML = '<option value="">V</option>';
   el('verse-select').disabled = true;
 }
 
 function populateChapters(bookAbbr) {
   const sel = el('chapter-select');
-  sel.innerHTML = '<option value="">Chapter</option>';
+  sel.innerHTML = '<option value="">Ch</option>';
   const book = BOOKS.find(b => b.abbr === bookAbbr);
   if (!book) return;
   for (let i = 1; i <= book.chapters; i++) {
@@ -146,7 +155,7 @@ function populateChapters(bookAbbr) {
 
 function populateVerses(bookAbbr, chapterNum) {
   const sel = el('verse-select');
-  sel.innerHTML = '<option value="">Verse</option>';
+  sel.innerHTML = '<option value="">V</option>';
   if (!currentData || !currentData[bookAbbr] || !currentData[bookAbbr][String(chapterNum)]) return;
   const verses = currentData[bookAbbr][String(chapterNum)];
   const keys = Object.keys(verses).sort((a, b) => parseInt(a) - parseInt(b));
@@ -159,6 +168,18 @@ function populateVerses(bookAbbr, chapterNum) {
   sel.disabled = false;
 }
 
+function renderVerseDisplay(container, bookAbbr, chapterNum, verseNum, text, bookName) {
+  const ref = `${bookName} ${chapterNum}:${verseNum}`;
+  container.innerHTML = `
+    <div class="verse-text-row">
+      <span class="verse-number-badge">${verseNum}</span>
+      <span class="verse-text">${text}</span>
+    </div>
+    <span class="verse-ref">${ref} (${getTranslationLabel()})</span>
+  `;
+  container.classList.add('has-verse');
+}
+
 function showVerse(bookAbbr, chapterNum, verseNum) {
   if (!currentData || !currentData[bookAbbr]) return false;
   const ch = currentData[bookAbbr][String(chapterNum)];
@@ -167,27 +188,25 @@ function showVerse(bookAbbr, chapterNum, verseNum) {
   if (!text) return false;
 
   const book = BOOKS.find(b => b.abbr === bookAbbr);
-  const ref = `${book ? book.name : bookAbbr} ${chapterNum}:${verseNum}`;
   currentVerseText = text;
   currentBook = bookAbbr;
   currentChapter = chapterNum;
   currentVerse = verseNum;
 
-  el('verse-display').innerHTML = `
-    ${text}
-    <span class="verse-ref">${ref} (${getTranslationLabel()})</span>
-  `;
+  renderVerseDisplay(el('browse-display'), bookAbbr, chapterNum, verseNum, text, book ? book.name : bookAbbr);
   enableCopyBtn(true);
   return true;
 }
 
-function clearVerse() {
+function clearBrowse() {
   currentVerseText = '';
-  currentBook = null;
-  currentChapter = null;
-  currentVerse = null;
-  el('verse-display').innerHTML = '<span class="placeholder">Select a verse to view</span>';
-  enableCopyBtn(false);
+  el('browse-display').innerHTML = '<div class="placeholder-text">Select a verse to view</div>';
+  el('browse-display').classList.remove('has-verse');
+}
+
+function clearSearch() {
+  el('search-display').innerHTML = '<div class="placeholder-text">Enter a reference to search</div>';
+  el('search-display').classList.remove('has-verse');
 }
 
 function enableCopyBtn(enabled) {
@@ -322,26 +341,30 @@ function parseReference(input) {
 }
 
 function showSearchResult(ref) {
-  const container = el('search-result');
+  const container = el('search-display');
   if (!ref) {
-    container.innerHTML = '<span class="placeholder">Enter a reference like "John 3:16"</span>';
+    container.innerHTML = '<div class="placeholder-text">Enter a reference to search</div>';
+    container.classList.remove('has-verse');
     return;
   }
 
   if (!currentData || !currentData[ref.abbr]) {
-    container.innerHTML = `<span class="placeholder">Book not found in ${getTranslationLabel()}</span>`;
+    container.innerHTML = `<div class="placeholder-text">Book not found in ${getTranslationLabel()}</div>`;
+    container.classList.remove('has-verse');
     return;
   }
 
   const ch = currentData[ref.abbr][String(ref.chapter)];
   if (!ch) {
-    container.innerHTML = `<span class="placeholder">Chapter ${ref.chapter} not found</span>`;
+    container.innerHTML = `<div class="placeholder-text">Chapter ${ref.chapter} not found</div>`;
+    container.classList.remove('has-verse');
     return;
   }
 
   const text = ch[String(ref.verse)];
   if (!text) {
-    container.innerHTML = `<span class="placeholder">Verse ${ref.verse} not found</span>`;
+    container.innerHTML = `<div class="placeholder-text">Verse ${ref.verse} not found</div>`;
+    container.classList.remove('has-verse');
     return;
   }
 
@@ -350,10 +373,7 @@ function showSearchResult(ref) {
   currentChapter = ref.chapter;
   currentVerse = ref.verse;
 
-  container.innerHTML = `
-    ${text}
-    <span class="verse-ref">${ref.bookName} ${ref.chapter}:${ref.verse} (${getTranslationLabel()})</span>
-  `;
+  renderVerseDisplay(container, ref.abbr, ref.chapter, ref.verse, text, ref.bookName);
   enableCopyBtn(true);
 
   el('book-select').value = ref.abbr;
@@ -368,7 +388,8 @@ function doSearch(input) {
   if (ref) {
     showSearchResult(ref);
   } else {
-    el('search-result').innerHTML = '<span class="placeholder">Invalid reference. Use format: Book Chapter:Verse (e.g. John 3:16)</span>';
+    el('search-display').innerHTML = '<div class="placeholder-text">Invalid reference. Use format: Book Chapter:Verse</div>';
+    el('search-display').classList.remove('has-verse');
     enableCopyBtn(false);
   }
 }
@@ -379,37 +400,38 @@ function showToast() {
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
-el('translation-select').addEventListener('change', () => {
-  loadTranslation(el('translation-select').value);
+const hiddenSelect = document.querySelector('#translation-select select');
+hiddenSelect.addEventListener('change', () => {
+  loadTranslation(hiddenSelect.value);
 });
 
 el('book-select').addEventListener('change', () => {
   const val = el('book-select').value;
   if (!val) {
-    el('chapter-select').innerHTML = '<option value="">Chapter</option>';
+    el('chapter-select').innerHTML = '<option value="">Ch</option>';
     el('chapter-select').disabled = true;
-    el('verse-select').innerHTML = '<option value="">Verse</option>';
+    el('verse-select').innerHTML = '<option value="">V</option>';
     el('verse-select').disabled = true;
-    clearVerse();
+    clearBrowse();
     return;
   }
   populateChapters(val);
-  el('verse-select').innerHTML = '<option value="">Verse</option>';
+  el('verse-select').innerHTML = '<option value="">V</option>';
   el('verse-select').disabled = true;
-  clearVerse();
+  clearBrowse();
 });
 
 el('chapter-select').addEventListener('change', () => {
   const book = el('book-select').value;
   const ch = el('chapter-select').value;
   if (!book || !ch) {
-    el('verse-select').innerHTML = '<option value="">Verse</option>';
+    el('verse-select').innerHTML = '<option value="">V</option>';
     el('verse-select').disabled = true;
-    clearVerse();
+    clearBrowse();
     return;
   }
   populateVerses(book, ch);
-  clearVerse();
+  clearBrowse();
 });
 
 el('verse-select').addEventListener('change', () => {
@@ -417,14 +439,10 @@ el('verse-select').addEventListener('change', () => {
   const ch = el('chapter-select').value;
   const v = el('verse-select').value;
   if (!book || !ch || !v) {
-    clearVerse();
+    clearBrowse();
     return;
   }
   showVerse(book, ch, v);
-});
-
-el('search-btn').addEventListener('click', () => {
-  doSearch(el('search-input').value);
 });
 
 el('search-input').addEventListener('keydown', (e) => {
