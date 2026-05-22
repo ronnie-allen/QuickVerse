@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Bible Verse Extractor",
+  "name": "QuickVerse",
   "version": "1.0.0",
-  "description": "Browse and copy Bible verses in Tamil (TOVBSI) and English (NIV, AMP) — one-click copy to paste into Google Docs",
+  "description": "Browse and copy Bible verses in Tamil (TOVBSI) and English (NIV, AMP) — one-click paste into Google Docs",
   "author": "Your Name",
   "homepage_url": "https://github.com/your-username/bible-extension",
   "permissions": [

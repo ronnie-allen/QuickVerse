@@ -1,26 +1,24 @@
-# Bible Verse Extractor
+# QuickVerse
 
-Chrome extension to browse and copy Bible verses in **TOVBSI** (Tamil), **NIV** (English), and **AMP** (English). One-click copy to paste into Google Docs.
+Chrome extension to browse and copy Bible verses in **TOVBSI** (Tamil), **NIV** (English), and **AMP** (English). One-click paste into Google Docs.
 
-## Install from Chrome Web Store
+## Features
 
-*(Add link once published)*
+- **3 Translations** — TOVBSI, NIV, AMP
+- **Browse** — pick Book → Chapter → Verse
+- **Search** — type a reference like `John 3:16`
+- **Instant Copy** — one click → clipboard → Ctrl+V anywhere
+- **Keyboard Shortcut** — press `Ctrl+Shift+B` to open
 
-## Manual Install (Developer Mode)
+## Install
 
+### Chrome Web Store
+*(link TBD)*
+
+### Developer Mode
 1. Open `chrome://extensions/`
-2. Enable **Developer mode** (top-right toggle)
-3. Click **Load unpacked**
-4. Select the `bible-extension` folder
-
-## Usage
-
-- Click the extension icon
-- Select a translation (TOVBSI / NIV / AMP)
-- **Browse** tab: pick Book → Chapter → Verse
-- **Search** tab: type a reference like `John 3:16` and press Enter
-- Click **Copy to Clipboard**
-- `Ctrl+V` into Google Docs
+2. Enable **Developer mode**
+3. Click **Load unpacked** → select the extension folder
 
 ## Translations
 
@@ -32,4 +30,4 @@ Chrome extension to browse and copy Bible verses in **TOVBSI** (Tamil), **NIV** 
 
 ## Privacy
 
-This extension collects no data, sends no network requests, and requires no special permissions beyond clipboard access.
+This extension collects no data and makes no network requests. Clipboard permission is used only when you click the copy button.
